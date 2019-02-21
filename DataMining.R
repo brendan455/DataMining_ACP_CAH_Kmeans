@@ -1,5 +1,5 @@
 source("http://www.bioconductor.org/biocLite.R")
-setwd("C:/Users/brdeniau/Documents/Projet R")
+setwd("Current Working Directory")
 RequiredfunctionsDir<-"requiredFiles/"
 source(paste0(RequiredfunctionsDir,"/kmeans_cah_acp.r"))
 
@@ -7,73 +7,73 @@ source(paste0(RequiredfunctionsDir,"/kmeans_cah_acp.r"))
 ####### Data IMPORT #######
 ###########################
 
-legumineuses<-read.table(paste(getwd(),"/Data/Legumes.csv",sep=""),header=T,row.names=1,sep=";")
+legumes<-read.table(paste(getwd(),"/Data/Legumes.csv",sep=""),header=T,row.names=1,sep=";")
 
 ###########################
-## Vérification données ###
+## VÃ©rification donnÃ©es ###
 ###########################
 
-boxplot(legumineuses$Eau)
-boxplot(legumineuses$ENG)
-boxplot(legumineuses$PROT)
-boxplot(legumineuses$GLUC)
-boxplot(legumineuses$LIPI)
-boxplot(legumineuses$SUC)
-boxplot(legumineuses$FIBR)
+boxplot(legumes$Eau)
+boxplot(legumes$ENG)
+boxplot(legumes$PROT)
+boxplot(legumes$GLUC)
+boxplot(legumes$LIPI)
+boxplot(legumes$SUC)
+boxplot(legumes$FIBR)
 
 ###########################
 ##### Calcul moyennes #####
 ###########################
 
-summary(legumineuses)
+summary(legumes)
 
 ###########################
 ### Clacul de Variances ###
 ###########################
 
-VarLegumes<-(var(legumineuses)*(nrow(legumineuses)-1))/nrow(legumineuses)
+VarLegumes<-(var(legumes)*(nrow(legumes)-1))/nrow(legumes)
 VarLegumes
 
 ###########################
 ### Coef de Correlation ###
 ###########################
 
-corleg<-cor(legumineuses)
+corleg<-cor(legumes)
 corleg
 
 ###########################
-# Données centr. réduit. ##
+# DonnÃ©es centr. rÃ©duit. ##
 ###########################
 
-CRlegumineuses<-centreduire(legumineuses)
-CRlegumineuses
+CRlegumes<-centreduire(legumes)
+CRlegumes
 
 ###########################
 ## Calcul distance Eucl. ##
 ###########################
 
-dlegumes<-dist(CRlegumineuses)
+dlegumes<-dist(CRlegumes)
 dlegumes
 
 ###########################
 ########## ACP ############
 ###########################
 
-ACP<-ACPN(legumineuses)
+ACP<-ACPN(legumes)
 plot(ACP)
-ACPP<-VP(ACP) # part d'intertie + coeff de kaiser
-coordonneespts<-ACP$score # coordonnées points
-matrice<-AXEVAR(legumineuses,ACP) #Matrice de corrélation
+ACPP<-VP(ACP) #Part d'intertie + coeff de kaiser
+coordonneespts<-ACP$score #CoordonnÃ©es points
+matrice<-AXEVAR(legumes,ACP) #Matrice de corrÃ©lation
 matrice
 
 ###########################
-########## Cos² ###########
+########## CosÂ² ###########
 ###########################
 
-cos2<-COS2TETA(ACP,3) #contrib des variablas à 3 axes sélectionnées
+cos2<-COS2TETA(ACP,3) #Contribution des variablas Ã  3 axes sÃ©lectionnÃ©es
 cos2
 
-contrib<-CTR(ACP,3)#Contribution des individus aux axes
+contrib<-CTR(ACP,3) #Contribution des individus aux axes
 contrib
 
 planacp<-PLAN(resacp = ACP, i = 1, j = 3)
@@ -82,8 +82,8 @@ planacp<-PLAN(resacp = ACP, i = 1, j = 3)
 ######### Kmeans ##########
 ###########################
 
-kmeans(legumineuses,7)
-kleg<-kmeans(legumineuses,10)
+kmeans(legumes,7)
+kleg<-kmeans(legumes,10)
 kleg
 
 kgrp<-kclass(kleg)
@@ -100,7 +100,7 @@ getCount <- function(x) {
 ########### CAH ###########
 ###########################
 
-cahward <- ward(legumineuses)
+cahward <- ward(legumes)
 plot(cahward)
 plot(cahward$height)
 
@@ -111,10 +111,9 @@ as.data.frame(partitions)
 Max_classes<-getCount(partitions)
 Max_classes[which(Max_classes$count %in% max(Max_classes$count)),]
 rap_inertie(cahward,5)
-cdgcl1(legumineuses,cahward,5) # Centre gravité
-ctrcl(legumineuses,cahward,5) # Contributions relatives
-ctrng(legumineuses,cahward,5) # Contribution CTR
-rho2(legumineuses,cahward,5) # Carré des distances
-iintra(legumineuses,cahward,5,3) # Inertie intraclasse
+cdgcl1(legumes,cahward,5) #Centre gravitÃ©
+ctrcl(legumes,cahward,5) #Contributions relatives
+ctrng(legumes,cahward,5) #Contribution CTR
+rho2(legumes,cahward,5) #CarrÃ© des distances
+iintra(legumes,cahward,5,3) #Inertie intraclasse
 rect.hclust(cahward,k=5)
-
